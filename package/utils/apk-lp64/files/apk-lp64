@@ -10,6 +10,7 @@
 #   add|del|upgrade|fix PKG...  install/remove/upgrade LP64 packages (apk, in the LP64 root)
 #   update|search|info|list|policy|dot ...   other apk commands, in the LP64 root
 #   run PROGRAM [ARGS]          run an LP64 program through the LP64 loader (no symlink needed)
+#                               (terminfo of the LP64 root is on the search path of ncurses programs)
 #   setup                       create the LP64 root and the loader link, nothing installed
 #   status                      show the configuration
 #   purge                       remove the LP64 root, the loader link and its library path file
@@ -72,6 +73,26 @@ link_loader() {
 	fi
 }
 
+# parts of packages that apk-lp64 does not set up: service scripts, kernel modules, LuCI pages
+snap_parts() {
+	for d in etc/init.d lib/modules usr/share/luci/menu.d; do
+		[ -d "$ROOT/$d" ] && (cd "$ROOT/$d" && find . -type f | sed "s|^\.|$d|")
+	done | sort
+}
+
+warn_parts() {  # <list before>
+	new=$(snap_parts | grep -vxF -f "$1")
+	[ -n "$new" ] || return 0
+	svc=$(echo "$new" | sed -n 's|^etc/init.d/||p' | tr '\n' ' ')
+	kmod=$(echo "$new" | grep -c '^lib/modules/' || true)
+	luci=$(echo "$new" | sed -n 's|^usr/share/luci/menu.d/||p' | tr '\n' ' ')
+	echo "apk-lp64: note: these packages have parts that apk-lp64 does not set up:" >&2
+	[ -z "$svc" ] || echo "  service scripts (not started, not seen by procd): $svc" >&2
+	[ "$kmod" = 0 ] || echo "  kernel modules (not loaded, not built for this kernel): $kmod files" >&2
+	[ -z "$luci" ] || echo "  LuCI pages (not shown by LuCI): $luci" >&2
+	echo "  apk-lp64 is meant for command-line programs; paths in those files point to this system." >&2
+}
+
 lp64_apk() {
 	# package scripts are never run (they would act on the ILP32 system); apk accepts --no-scripts only for
 	# the commands that change packages
@@ -86,7 +107,9 @@ cmd=${1:-}
 case "$cmd" in
 add|upgrade|fix)
 	check; setup_root
-	lp64_apk "$cmd" "$@" || exit
+	before=$(mktemp) && snap_parts > "$before"
+	lp64_apk "$cmd" "$@" || { rm -f "$before"; exit 1; }
+	warn_parts "$before"; rm -f "$before"
 	[ -e "$ROOT/lib/libc.so" ] && link_loader
 	;;
 del|update|search|info|list|policy|dot)
@@ -101,6 +124,8 @@ run)
 	*) for d in usr/bin usr/sbin bin sbin; do [ -x "$ROOT/$d/$p" ] && { p=$ROOT/$d/$p; break; }; done ;;
 	esac
 	[ -x "$p" ] || die "no LP64 program '$p' in $ROOT"
+	# ncurses programs (htop, ...) find their terminal descriptions of the LP64 root as well
+	[ -d "$ROOT/usr/share/terminfo" ] && TERMINFO_DIRS="${TERMINFO_DIRS:+$TERMINFO_DIRS:}$ROOT/usr/share/terminfo" && export TERMINFO_DIRS
 	exec "$ROOT/lib/libc.so" --library-path "$ROOT/lib:$ROOT/usr/lib" "$p" "$@"
 	;;
 setup)

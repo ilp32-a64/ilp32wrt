@@ -4,3 +4,12 @@ for d in /opt/lp64/usr/bin /opt/lp64/usr/sbin /opt/lp64/bin /opt/lp64/sbin; do
 done
 unset d
 export PATH
+# terminal descriptions of the LP64 packages (htop, ...) next to those of the system: ncurses searches
+# TERMINFO_DIRS before its built-in path, which points to this (ILP32) system
+if [ -d /opt/lp64/usr/share/terminfo ]; then
+	case ":${TERMINFO_DIRS:-}:" in
+	*":/opt/lp64/usr/share/terminfo:"*) ;;
+	*) TERMINFO_DIRS="${TERMINFO_DIRS:+$TERMINFO_DIRS:}/opt/lp64/usr/share/terminfo" ;;
+	esac
+	export TERMINFO_DIRS
+fi
