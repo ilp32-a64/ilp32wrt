@@ -81,7 +81,8 @@ snap_parts() {
 }
 
 warn_parts() {  # <list before>
-	new=$(snap_parts | grep -vxF -f "$1")
+	# BusyBox grep -v with an empty pattern file prints nothing: take everything then
+	if [ -s "$1" ]; then new=$(snap_parts | grep -vxF -f "$1"); else new=$(snap_parts); fi
 	[ -n "$new" ] || return 0
 	svc=$(echo "$new" | sed -n 's|^etc/init.d/||p' | tr '\n' ' ')
 	kmod=$(echo "$new" | grep -c '^lib/modules/' || true)
