@@ -39,7 +39,7 @@ FILES_DIR?=$(CURDIR)/files
 HOST_PATCH_DIR?=$(PATCH_DIR)
 HOST_FILES_DIR?=$(FILES_DIR)
 
-# patches of OpenWrt-ILP32 for a package of a feed (the feeds stay as pinned by feeds.conf.default):
+# patches of ILP32Wrt for a package of a feed (the feeds stay as pinned by feeds.conf.default):
 # feeds-patches/<feed>/<PKG_NAME>/, applied after the patches of the package, target and host build
 FEED_PATCH_DIR:=$(if $(filter $(TOPDIR)/feeds/%,$(CURDIR)),$(wildcard $(TOPDIR)/feeds-patches/$(firstword $(subst /, ,$(patsubst $(TOPDIR)/feeds/%,%,$(CURDIR))))/$(PKG_NAME)))
 PKG_FILE_DEPENDS+=$(FEED_PATCH_DIR)

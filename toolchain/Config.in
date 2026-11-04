@@ -315,7 +315,7 @@ menuconfig EXTRA_TARGET_ARCH
 		bool "Use prebuilt clang (do not build LLVM)" if TOOLCHAINOPTS
 		depends on CLANG_ILP32
 		help
-		   Use the prebuilt llvm-ilp32 of an OpenWrt-ILP32 release
+		   Use the prebuilt llvm-ilp32 of an ILP32Wrt release
 		   (x86_64 Linux hosts, glibc 2.35 or later) instead of building
 		   LLVM, which takes hours: unpack it and rename or link the
 		   directory to llvm-ilp32 in the top directory of the tree.

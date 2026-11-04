@@ -1,5 +1,5 @@
 #!/bin/sh
-# apk-lp64: install and run official OpenWrt LP64 packages on an OpenWrt-ILP32 system.
+# apk-lp64: install and run official OpenWrt LP64 packages on an ILP32Wrt system.
 #
 # The kernel runs LP64 programs next to the ILP32 system. The packages go into a root of their own
 # (default /opt/lp64) with its own apk database, repositories and keys, and run through the LP64 musl loader
@@ -29,13 +29,13 @@ PATHFILE=/etc/ld-musl-aarch64.path
 die() { echo "apk-lp64: $*" >&2; exit 1; }
 
 . /etc/openwrt_release
-# OpenWrt-ILP32 25.12.6-ilp32.2 is based on OpenWrt 25.12.6; its packages are aarch64_<cpu>_ilp32
+# ILP32Wrt 25.12.6-ilp32.2 is based on OpenWrt 25.12.6; its packages are aarch64_<cpu>_ilp32
 VERSION=${APK_LP64_VERSION:-${DISTRIB_RELEASE%%-ilp32*}}
 TARGET=${APK_LP64_TARGET:-$DISTRIB_TARGET}
 ARCH=${APK_LP64_ARCH:-${DISTRIB_ARCH%_ilp32}}
 
 check() {
-	[ -e /lib/ld-musl-aarch64_ilp32.so.1 ] || die "this is not an OpenWrt-ILP32 system"
+	[ -e /lib/ld-musl-aarch64_ilp32.so.1 ] || die "this is not an ILP32Wrt system"
 	case "$ARCH" in aarch64_*) ;; *) die "unexpected package architecture '$ARCH'" ;; esac
 	case "$VERSION" in [0-9]*.[0-9]*.[0-9]*) ;;
 	*) die "cannot tell the OpenWrt release from '$DISTRIB_RELEASE'; set APK_LP64_VERSION" ;; esac

@@ -5,7 +5,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=apk-lp64
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_LICENSE:=GPL-2.0-only
 PKG_MAINTAINER:=liviyifan <344781483+liviyifan@users.noreply.github.com>
 
@@ -14,7 +14,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/apk-lp64
   SECTION:=utils
   CATEGORY:=Utilities
-  TITLE:=Install and run official OpenWrt LP64 packages on OpenWrt-ILP32
+  TITLE:=Install and run official OpenWrt LP64 packages on ILP32Wrt
   DEPENDS:=@AARCH64_ABI_ILP32 +apk
   PKGARCH:=all
 endef
