@@ -1,6 +1,6 @@
 name: Release
 
-# Build, test and draft an OpenWrt-ILP32 release (armsr/armv8, devices of mediatek/filogic, Raspberry Pi 3-5).
+# Build, test and draft an ILP32Wrt release (armsr/armv8, devices of mediatek/filogic, Raspberry Pi 3-5).
 # Manual only. Each target is built in its own job; the QEMU checks run on armsr/armv8. Two human gates: the release
 # job waits for approval in the "release" environment, and the Release it creates is a draft that is
 # published by hand.
@@ -19,7 +19,7 @@ on:
         description: "test-ilp32 commit with build-release.sh and the QEMU tests (full SHA)"
         required: true
         type: string
-        default: "29fc46da4c79005bb4eaec7a0fa1f5e22e56add0"
+        default: "7c0f3f0737ccbde0cd9cd4c606d36c813a550526"
 
 permissions:
   contents: read
@@ -71,7 +71,7 @@ jobs:
             python3 python3-dev python3-setuptools quilt rsync swig time \
             unzip wget xz-utils zlib1g-dev zstd > /dev/null
 
-      - name: Check out openwrt-ilp32
+      - name: Check out ilp32wrt
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ilp32-25.12
@@ -107,7 +107,7 @@ jobs:
         uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
           subject-path: |
-            out/release/openwrt-*
+            out/release/ilp32wrt-*
             out/release/sha256sums-*
 
       - name: Upload the release files
@@ -214,7 +214,7 @@ jobs:
         run: |
           set -eu
           TAG=v$VERSION
-          TITLE="OpenWrt-ILP32 $VERSION (experimental)"
+          TITLE="ILP32Wrt $VERSION (experimental)"
           # one sha256sums for all targets; the per-target lists and public-info files are not published
           cd release
           for s in sha256sums-*; do sha256sum -c "$s"; done
