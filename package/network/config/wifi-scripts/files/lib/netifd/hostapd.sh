@@ -819,7 +819,7 @@ hostapd_set_bss_options() {
 	[ -n "$wps_possible" -a -n "$config_methods" ] && {
 		set_default ext_registrar 0
 		set_default wps_device_type "6-0050F204-1"
-		set_default wps_device_name "OpenWrt AP"
+		set_default wps_device_name "ILP32Wrt AP"
 		set_default wps_manufacturer "www.openwrt.org"
 		set_default wps_independent 1
 
