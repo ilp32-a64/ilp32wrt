@@ -1,0 +1,16 @@
+From: liviyifan <344781483+liviyifan@users.noreply.github.com>
+Subject: wireless: default SSID of a new network in the ILP32Wrt name
+
+Signed-off-by: liviyifan <344781483+liviyifan@users.noreply.github.com>
+---
+--- a/htdocs/luci-static/resources/view/network/wireless.js
++++ b/htdocs/luci-static/resources/view/network/wireless.js
+@@ -2574,7 +2574,7 @@
+ 			uci.add('wireless', 'wifi-iface', section_id);
+ 			uci.set('wireless', section_id, 'device', radioDev.getName());
+ 			uci.set('wireless', section_id, 'mode', 'ap');
+-			uci.set('wireless', section_id, 'ssid', 'OpenWrt');
++			uci.set('wireless', section_id, 'ssid', 'ILP32Wrt');
+ 			uci.set('wireless', section_id, 'encryption', 'none');
+ 
+ 			m.addedSection = section_id;
