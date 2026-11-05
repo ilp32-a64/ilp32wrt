@@ -249,7 +249,7 @@
 		"device_name": {
 			"description": "Primary Device Name used by WPS",
 			"type": "string",
-			"default": "OpenWrt AP"
+			"default": "ILP32Wrt AP"
 		},
 		"device_type": {
 			"description": "Primary Device Type used by WPS",
